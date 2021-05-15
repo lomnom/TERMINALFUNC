@@ -200,8 +200,11 @@ def fillWithSpaces(crIfRaw=True):
 	for line in f.fromTo(1,size["rows"]):
 		print(" "*size["columns"],crIfRaw=crIfRaw,newline=True)
 
-def changeStyle(background=False,foreground=False,color8=False,color256=False,trueColor=False):
-	color8={"colorCodes":
+def changeStyle(background=False,foreground=False,color8=False,color256=False,
+	reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,
+	invert=False,invisible=False,strikethrough=False):
+
+	color8s={"colorCodes":
 				{"black":"0",
 				"red":"1",
 				"green":"2",
@@ -212,8 +215,36 @@ def changeStyle(background=False,foreground=False,color8=False,color256=False,tr
 				"white":"7"
 				}
 			,"foregroundStarter":"3"
-			,"backgroundStarter":"4"}
+			,"backgroundStarter":"4"
+			}
+
 	if not color8==False:
 		if not background==False:
-			print()
+			print(e.buildEscape("esc",color8s["backgroundStarter"]+color8s["colorCodes"][color8]+"m"))
+		if not foreground==False:
+			print(e.buildEscape("esc",color8s["foregroundStarter"]+color8s["colorCodes"][color8]+"m"))
+	elif not color256==False:
+		if not background==False:
+			print(e.Escapes.Color256.Background.color(color256))
+		if not foreground==False:
+			print(e.Escapes.Color256.Foreground.color(color256))
+
+	if reset:
+		print(e.Escapes.Style.reset)
+	if bold:
+		print(e.Escapes.Style.bold)
+	if dim:
+		print(e.Escapes.Style.dim)
+	if italic:
+		print(e.Escapes.Style.italic)
+	if underline:
+		print(e.Escapes.Style.underline)
+	if blink:
+		print(e.Escapes.Style.blink)
+	if invert:
+		print(e.Escapes.Style.invert)
+	if invisible:
+		print(e.Escapes.Style.invisible)
+	if strikethrough:
+		print(e.Escapes.Style.strikethrough) 
 
