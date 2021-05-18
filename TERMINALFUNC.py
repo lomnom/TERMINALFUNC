@@ -94,7 +94,7 @@ def getLastChar(block=False,includeNewline=True): #get previous char pressed
 
 	return None #return nothing otherwise
 
-def getLastChars(includeNewline=True,mustEndWithNewline=False): #VERY buggy unblocked getchars function
+def getLastChars(includeNewline=True,mustEndWithNewline=False): #VERY buggy unblocked getchars function, NOT documenting.
 	chars=""
 
 	while True:
@@ -130,7 +130,7 @@ def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,
 				print(
 					e.Escapes.Erase.FromCursor.toEndOfLine
 				)
-			elif toStart:
+			if toStart:
 				print(
 					e.Escapes.Erase.FromCursor.toStartOfLine
 				)
@@ -139,7 +139,7 @@ def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,
 				print(
 					e.Escapes.Erase.FromCursor.toEndOfScreen
 				)
-			elif toStart:
+			if toStart:
 				print(
 					e.Escapes.Erase.FromCursor.toStartOfScreen
 				)
