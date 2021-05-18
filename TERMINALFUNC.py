@@ -6,8 +6,13 @@ import FUNC as f
 isRaw=False
 cursorVisible=True
 isEchoKeys=True
+noSleepProcess=None
 
-def getPosition(): 
+def stopSleep():
+	from os import getpid
+	f.runBash("caffeinate -w "+str(getpid()),background=True)
+
+def getPosition():  #get current cursor position
 	#https://stackoverflow.com/questions/46651602/determine-the-terminal-cursor-position-with-an-ansi-sequence-in-python-3
 	import os, re, sys, termios, tty
 
@@ -29,21 +34,21 @@ def getPosition():
 		termios.tcsetattr(stdin, termios.TCSANOW, tattr)
 
 	# reading the actual values, but what if a keystroke appears while reading
-	# from stdin? As dirty work around, getpos() returns if this fails: None
+	# from stdin? As dirty work around, getpos() recurses and calls itself to try again
 	try:
 		matches = re.match(r"^\x1b\[(\d*);(\d*)R", buf)
 		groups = matches.groups()
 	except AttributeError:
-		return None
+		return getPosition() #any keypresses will make it attributeerror, so try again. will error if 1000th time fails
 
 	return {"row":int(groups[0]), "column":int(groups[1])}
 
-def getTerminalSize():
+def getTerminalSize(): #get size of current terminal
 	from os import get_terminal_size
 	columns,lines=get_terminal_size()
 	return {"columns":columns,"rows":lines}
 
-def print(string,newline=False,stdout=True,flush=True,moveCursor=True,crIfRaw=True):
+def print(string,newline=False,stdout=True,flush=True,moveCursor=True,crIfRaw=True): #advanced print
 	#crIfRaw is to add carraige return if in raw mode
 	global isRaw
 
@@ -71,11 +76,11 @@ def print(string,newline=False,stdout=True,flush=True,moveCursor=True,crIfRaw=Tr
 	if not moveCursor:
 		saver.load(0)
 
-def checkStdinForData():
+def checkStdinForData(): #check if stdin has data
 	import select
 	return select.select([sys.stdin,],[],[],0.0)[0]
 
-def getLastChar(block=False,includeNewline=True):
+def getLastChar(block=False,includeNewline=True): #get previous char pressed
 	sys.stdin.flush()
 	if block: #blocked, so dint care if got data
 		data=sys.stdin.read(1)
@@ -89,21 +94,24 @@ def getLastChar(block=False,includeNewline=True):
 
 	return None #return nothing otherwise
 
-def getLastChars(includeNewline=True,mustEndWithNewline=True):
+def getLastChars(includeNewline=True,mustEndWithNewline=False): #VERY buggy unblocked getchars function
 	chars=""
 
 	while True:
 		char=getLastChar(includeNewline=includeNewline)
 		if char==None:
-			if chars.endswith("\n") and mustEndWithNewline: #there is a bug that incomplete input is received
-				#, and it always doesnt end with a \n
+			if mustEndWithNewline:
+				if chars.endswith("\n"): #there is a bug that incomplete input is received
+					#, and it always doesnt end with a \n
+					break
+			else:
 				break
 		else:
 			chars+=char
 
 	return chars
 
-def echoKeys(enable=False,disable=False):
+def echoKeys(enable=False,disable=False): #change whether to let keypresses be displayed on the terminal
 	global isEchoKeys
 	if enable:
 		f.runBash("stty echo")
@@ -114,7 +122,8 @@ def echoKeys(enable=False,disable=False):
 	else:
 		return isEchoKeys
 
-def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,toStart=False):
+def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,toStart=False): 
+	#clear the terminal in different ways
 	if fromCursor:
 		if line:
 			if toEnd:
@@ -149,7 +158,7 @@ def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,
 			e.Escapes.Erase.entireLine
 		) 
 
-class CursorSaver:
+class CursorSaver: #class to save and load cursor positions
 	def __init__(self):
 		self.saves={}
 
@@ -162,7 +171,8 @@ class CursorSaver:
 	def load(self,name):
 		print(e.Escapes.Cursor.moveEscape(self.saves[name]["row"],self.saves[name]["column"]))
 
-def raw(enable=False,disable=False):
+def raw(enable=False,disable=False): 
+	#enable and disable raw (unbuffered) mode. useful for getting last char without newline
 	global isRaw
 
 	if enable:
@@ -178,7 +188,7 @@ def raw(enable=False,disable=False):
 	else:
 		return isRaw
 
-def cursorVisibility(hide=False,show=False):
+def cursorVisibility(hide=False,show=False): #change cursor visibility
 	global cursorVisible
 	if show:
 		print(e.Escapes.Cursor.makeVisible)
@@ -189,16 +199,24 @@ def cursorVisibility(hide=False,show=False):
 	else:
 		print(cursorVisible)
 
-def bell():
+def bell(): #make terminal make bell sound
 	print(e.Escapes.bell)
 
-def backspace():
+def backspace(): #backspace
 	print(e.Escapes.backspace)
 
-def fillWithSpaces(crIfRaw=True):
+def fillWithSpaces(crIfRaw=True): #fill screen with spaces
+	cursor=CursorSaver()
+	cursor.save(0)
+
 	size=getTerminalSize()
-	for line in f.fromTo(1,size["rows"]):
+	for line in f.fromTo(2,size["rows"]):
 		print(" "*size["columns"],crIfRaw=crIfRaw,newline=True)
+	cursor.load(0)
+
+def fillRowWithSpaces():
+	size=getTerminalSize()
+	print(" "*size["columns"],moveCursor=False)
 
 def changeStyle(background=False,foreground=False,color8=False,color256=False,
 	reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,
@@ -248,3 +266,27 @@ def changeStyle(background=False,foreground=False,color8=False,color256=False,
 	if strikethrough:
 		print(e.Escapes.Style.strikethrough) 
 
+def moveCursor(to=False,up=False,down=False,left=False,right=False,home=False): #move cursor
+	if not to==False:
+		print(e.Escapes.Cursor.moveEscape(to["row"],to["column"]))
+
+	if not up==False:
+		print(e.Escapes.Cursor.upEscape(up))
+
+	if not down==False:
+		print(e.Escapes.Cursor.downEscape(down))
+
+	if not left==False:
+		print(e.Escapes.Cursor.upEscape(left))
+
+	if not right==False:
+		print(e.Escapes.Cursor.downEscape(right))
+
+	if not home==False:
+		print(e.Escapes.Cursor.home)
+
+def saveScreen():
+	print(e.Escapes.saveScreen)
+
+def loadScreen():
+	print(e.Escapes.load)
