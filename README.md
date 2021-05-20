@@ -106,7 +106,6 @@ rm "$PYPATH"TERMINALFUNC.py
 
 ---
 
-**DISCLAIMERS**:
-  - disclaimer
+Example: [PI](https://github.com/lomnom/PI/blob/main/PI.py)
 
 ---
