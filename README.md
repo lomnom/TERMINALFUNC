@@ -79,3 +79,34 @@
   > If `down` is not `False`, it will move the cursor down `down` spaces
   > If `left` is not `False`, it will move the cursor left `left` spaces
   > If `right` is not `False`, it will move the cursor right `right` spaces
+
+## Installation:
+### Macos/Linux:
+
+1. [install ESCAPES](https://github.com/lomnom/ESCAPES/blob/main/README.md)
+3. Run this:
+```
+echo "import os;print(os.__file__.replace('os.py',''))" > aahifbsab.py
+PYPATH=$(python3 aahifbsab.py)
+rm aahifbsab.py
+curl https://raw.githubusercontent.com/lomnom/TERMINALFUNC/main/TERMINALFUNC.py > kashdfj.py
+mv kashdfj.py "$PYPATH"TERMINALFUNC.py
+```
+
+## Uninstallation:
+### macos/linux:
+1. [uninstall ESCAPES](https://github.com/lomnom/ESCAPES/blob/main/README.md)
+2. Run this:
+```
+echo "import os;print(os.__file__.replace('os.py',''))" > aahifbsab.py
+PYPATH=$(python3 aahifbsab.py)
+rm aahifbsab.py
+rm "$PYPATH"TERMINALFUNC.py
+```
+
+---
+
+**DISCLAIMERS**:
+  - disclaimer
+
+---
