@@ -79,10 +79,3 @@
   > If `down` is not `False`, it will move the cursor down `down` spaces
   > If `left` is not `False`, it will move the cursor left `left` spaces
   > If `right` is not `False`, it will move the cursor right `right` spaces
-
----
-
-**DISCLAIMERS**:
-  - disclaimer
-
----
