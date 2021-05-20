@@ -106,6 +106,6 @@ rm "$PYPATH"TERMINALFUNC.py
 
 ---
 
-Example: [PI](https://github.com/lomnom/PI/blob/main/PI.py)
+Example: https://github.com/lomnom/PI
 
 ---
