@@ -69,15 +69,7 @@
       , it will make the background of all text printed after changing style `color8` colored
     > If `color256` is not `False` and is a `int` from `0` to `256`, it will make the background of all text printed after changing style `color256` colored
   > If `foreground` is changed to True:
-    > If `color8` is not `False`, and is one of these: 
-      > `black`
-      > `red`
-      > `green`
-      > `yellow`
-      > `blue`
-      > `magenta`
-      > `cyan`
-      > `white`
+    > If `color8` is not `False`, and is one of these: `blue` `black` `red` `green` `yellow` `magenta` `cyan` `white`
       , it will make the foreground of all text printed after changing style `color8` colored
     > If `color256` is not `False` and is a `int` from `0` to `256`, it will make the foreground of all text printed after changing style `color256` colored
 - `moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False)`: move the cursor
