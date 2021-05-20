@@ -30,8 +30,63 @@
     > If `scrollback` is changed to `True`, it will clear the scrollback
     > If `line` is changed to `True`, it will clear the line that the cursor is currently on
 - `CursorSaver`: a class with cursor-saving and loading utils
-  > Object needs to be initialised
-
+  > initialising requires no args
+  > `CursorSaver.save(id)`: save cursor with `id` as the id. `id` must be hashable
+  > `CursorSaver.get(id)`: get the position with `id`. Returns with the same format as `getPosition()`
+  > `CursorSaver.load(id)`: go to the position in `id`
+- `raw(enable=False,disable=False)`: set raw mode.
+  > If `enable` is changed to `True`, it will enable raw mode
+  > If `disable` is changed to `True`, it will disable raw mode
+  > If nothing is changed, it will return whether raw mode is activated
+- `cursorVisibility(hide=False,show=False)`: set raw mode.
+  > If `show` is changed to `True`, it will show the cursor
+  > If `hide` is changed to `True`, it will hide the cursor
+  > If nothing is changed, it will return whether cursor is visible
+- `bell()`: makes the terminal ring
+- `backspace()`: prints a backspace
+- `fillWithSpaces()`: fill the screen with spaces, pushing everything above into scrollback and allowing the cursor to move everywhere
+- `fillRowWithSpaces()`: fill the current row with spaces
+- `changeStyle(background=False,foreground=False,color8=False,color256=False,reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,invert=False,invisible=False,strikethrough=False)`: change the current text style/color
+  > If `reset` is changed to True, all text printed after changing style will be reset  
+  > If `bold` is changed to True, all text printed after changing style will be bold  
+  > If `dim` is changed to True, all text printed after changing style will be dim  
+  > If `italic` is changed to True, all text printed after changing style will be italic  
+  > If `underline` is changed to True, all text printed after changing style will be underline  
+  > If `blink` is changed to True, all text printed after changing style will be blink  
+  > If `invert` is changed to True, all text printed after changing style will be inverted
+  > If `invisible` is changed to True, all text printed after changing style will be invisible  
+  > If `strikethrough` is changed to True, all text printed after changing style will be strikethrough'd
+  > If `background` is changed to True:
+    > If `color8` is not `False`, and is one of these: 
+      > `black`
+      > `red`
+      > `green`
+      > `yellow`
+      > `blue`
+      > `magenta`
+      > `cyan`
+      > `white`
+      , it will make the background of all text printed after changing style `color8` colored
+    > If `color256` is not `False` and is a `int` from `0` to `256`, it will make the background of all text printed after changing style `color256` colored
+  > If `foreground` is changed to True:
+    > If `color8` is not `False`, and is one of these: 
+      > `black`
+      > `red`
+      > `green`
+      > `yellow`
+      > `blue`
+      > `magenta`
+      > `cyan`
+      > `white`
+      , it will make the foreground of all text printed after changing style `color8` colored
+    > If `color256` is not `False` and is a `int` from `0` to `256`, it will make the foreground of all text printed after changing style `color256` colored
+> `moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False)`: move the cursor
+  > If `to` is not `False`, it will move the cursor to column `to["column"]` and row `to["row"]`
+  > If `column` is not `False`, it will move the cursor to column `column`
+  > If `up` is not `False`, it will move the cursor up `up` spaces
+  > If `down` is not `False`, it will move the cursor down `down` spaces
+  > If `left` is not `False`, it will move the cursor left `left` spaces
+  > If `right` is not `False`, it will move the cursor right `right` spaces
 
 ---
 
