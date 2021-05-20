@@ -80,7 +80,7 @@
       > `white`
       , it will make the foreground of all text printed after changing style `color8` colored
     > If `color256` is not `False` and is a `int` from `0` to `256`, it will make the foreground of all text printed after changing style `color256` colored
-> `moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False)`: move the cursor
+- `moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False)`: move the cursor
   > If `to` is not `False`, it will move the cursor to column `to["column"]` and row `to["row"]`
   > If `column` is not `False`, it will move the cursor to column `column`
   > If `up` is not `False`, it will move the cursor up `up` spaces
