@@ -143,6 +143,7 @@ def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,
 				print(
 					e.Escapes.Erase.FromCursor.toStartOfScreen
 				)
+		return
 
 	if screen:
 		print(
@@ -218,9 +219,11 @@ def fillRowWithSpaces():
 	size=getTerminalSize()
 	print(" "*size["columns"],moveCursor=False)
 
-def changeStyle(background=False,foreground=False,color8=False,color256=False,
+def style(background=False,foreground=False,color8=False,color256=False,
 	reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,
 	invert=False,invisible=False,strikethrough=False):
+	
+	escapes=""
 
 	color8s={"colorCodes":
 				{"black":"0",
@@ -238,35 +241,46 @@ def changeStyle(background=False,foreground=False,color8=False,color256=False,
 
 	if not color8==False:
 		if not background==False:
-			print(e.buildEscape("esc",color8s["backgroundStarter"]+color8s["colorCodes"][color8]+"m"))
+			escapes+=e.buildEscape("esc",color8s["backgroundStarter"]+color8s["colorCodes"][color8]+"m")
 		if not foreground==False:
-			print(e.buildEscape("esc",color8s["foregroundStarter"]+color8s["colorCodes"][color8]+"m"))
+			escapes+=e.buildEscape("esc",color8s["foregroundStarter"]+color8s["colorCodes"][color8]+"m")
 	elif not color256==False:
 		if not background==False:
-			print(e.Escapes.Color256.Background.color(color256))
+			escapes+=e.Escapes.Color256.Background.color(color256)
 		if not foreground==False:
-			print(e.Escapes.Color256.Foreground.color(color256))
+			escapes+=e.Escapes.Color256.Foreground.color(color256)
 
 	if reset:
-		print(e.Escapes.Style.reset)
+		escapes+=e.Escapes.Style.reset
 	if bold:
-		print(e.Escapes.Style.bold)
+		escapes+=e.Escapes.Style.bold
 	if dim:
-		print(e.Escapes.Style.dim)
+		escapes+=e.Escapes.Style.dim
 	if italic:
-		print(e.Escapes.Style.italic)
+		escapes+=e.Escapes.Style.italic
 	if underline:
-		print(e.Escapes.Style.underline)
+		escapes+=e.Escapes.Style.underline
 	if blink:
-		print(e.Escapes.Style.blink)
+		escapes+=e.Escapes.Style.blink
 	if invert:
-		print(e.Escapes.Style.invert)
+		escapes+=e.Escapes.Style.invert
 	if invisible:
-		print(e.Escapes.Style.invisible)
+		escapes+=e.Escapes.Style.invisible
 	if strikethrough:
-		print(e.Escapes.Style.strikethrough) 
+		escapes+=e.Escapes.Style.strikethrough
 
-def moveCursor(to=False,up=False,down=False,left=False,right=False,home=False): #move cursor
+	return escapes
+
+def changeStyle(background=False,foreground=False,color8=False,color256=False,
+	reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,
+	invert=False,invisible=False,strikethrough=False):
+
+	print(style(background=background,foreground=foreground,color8=color8,
+		color256=color256,reset=reset,bold=bold,dim=dim,italic=italic,
+		underline=underline,blink=blink,invert=invert,invisible=invisible,
+		strikethrough=strikethrough))
+
+def moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False): #move cursor
 	if not to==False:
 		print(e.Escapes.Cursor.moveEscape(to["row"],to["column"]))
 
@@ -277,13 +291,16 @@ def moveCursor(to=False,up=False,down=False,left=False,right=False,home=False): 
 		print(e.Escapes.Cursor.downEscape(down))
 
 	if not left==False:
-		print(e.Escapes.Cursor.upEscape(left))
+		print(e.Escapes.Cursor.leftEscape(left))
 
 	if not right==False:
-		print(e.Escapes.Cursor.downEscape(right))
+		print(e.Escapes.Cursor.rightEscape(right))
 
 	if not home==False:
 		print(e.Escapes.Cursor.home)
+
+	if not column==False:
+		print(moveToColumn(column)) 
 
 def saveScreen():
 	print(e.Escapes.saveScreen)
