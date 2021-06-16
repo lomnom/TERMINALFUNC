@@ -206,22 +206,25 @@ def bell(): #make terminal make bell sound
 def backspace(): #backspace
 	print(e.Escapes.backspace)
 
-def fillWithSpaces(crIfRaw=True): #fill screen with spaces
+def fillWithSpaces(crIfRaw=True,saveCursor=True): #fill screen with spaces
 	cursor=CursorSaver()
-	cursor.save(0)
+	if saveCursor:
+		cursor.save(0)
 
 	size=getTerminalSize()
 	for line in f.fromTo(2,size["rows"]):
 		print(" "*size["columns"],crIfRaw=crIfRaw,newline=True)
-	cursor.load(0)
+
+	if saveCursor:
+		cursor.load(0)
 
 def fillRowWithSpaces():
 	size=getTerminalSize()
 	print(" "*size["columns"],moveCursor=False)
 
-def style(background=False,foreground=False,color8=False,color256=False,
-	reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,
-	invert=False,invisible=False,strikethrough=False):
+def style(background=None,foreground=None,color8=None,color256=None,
+	reset=None,bold=None,dim=None,italic=None,underline=None,blink=None,
+	invert=None,invisible=None,strikethrough=None):
 	
 	escapes=""
 
@@ -239,15 +242,15 @@ def style(background=False,foreground=False,color8=False,color256=False,
 			,"backgroundStarter":"4"
 			}
 
-	if not color8==False:
-		if not background==False:
+	if not color8==None:
+		if not background==None:
 			escapes+=e.buildEscape("esc",color8s["backgroundStarter"]+color8s["colorCodes"][color8]+"m")
-		if not foreground==False:
+		if not foreground==None:
 			escapes+=e.buildEscape("esc",color8s["foregroundStarter"]+color8s["colorCodes"][color8]+"m")
-	elif not color256==False:
-		if not background==False:
+	elif not color256==None:
+		if not background==None:
 			escapes+=e.Escapes.Color256.Background.color(color256)
-		if not foreground==False:
+		if not foreground==None:
 			escapes+=e.Escapes.Color256.Foreground.color(color256)
 
 	if reset:
@@ -271,9 +274,9 @@ def style(background=False,foreground=False,color8=False,color256=False,
 
 	return escapes
 
-def changeStyle(background=False,foreground=False,color8=False,color256=False,
-	reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,
-	invert=False,invisible=False,strikethrough=False):
+def changeStyle(background=None,foreground=None,color8=None,color256=None,
+	reset=None,bold=None,dim=None,italic=None,underline=None,blink=None,
+	invert=None,invisible=None,strikethrough=None):
 
 	print(style(background=background,foreground=foreground,color8=color8,
 		color256=color256,reset=reset,bold=bold,dim=dim,italic=italic,
