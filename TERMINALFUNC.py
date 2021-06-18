@@ -314,19 +314,18 @@ def loadScreen():
 
 class KeyLogger:
 	def __init__(self):
-		pass
+		self.keys=[]
 
 	def start(self):
 		self.proccess=f.runInParallel([[self.keyHandler,()]])
 
 	def keyHandler(self):
-		self.key=None
 		self.stop=False
 		while not self.stop:
 			t.sleep(0.01)
 			char=getLastChar()
 			if not char==None:
-				self.key=char
+				self.keys+=[{t.time():key}]
 
 	def halt(self,wait=True):
 		self.stop=True
