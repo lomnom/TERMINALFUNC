@@ -2,6 +2,7 @@ import ESCAPES as e
 import sys
 import select
 import FUNC as f
+import time as t
 
 isRaw=False
 cursorVisible=True
@@ -310,3 +311,118 @@ def saveScreen():
 
 def loadScreen():
 	print(e.Escapes.load)
+
+class KeyLogger:
+	def __init__(self):
+		pass
+
+	def start(self):
+		self.proccess=f.runInParallel([[self.keyHandler,()]])
+
+	def keyHandler(self):
+		self.key=None
+		self.stop=False
+		while not self.stop:
+			t.sleep(0.01)
+			char=getLastChar()
+			if not char==None:
+				self.key=char
+
+	def halt(self,wait=True):
+		self.stop=True
+		if wait:
+			self.proccess[0].join()
+
+class KeyHandler:
+	def __init__(self,actions): #actions are {"a":function}
+		self.actions=actions
+		self.actionProcecces=[]
+
+	def start(self):
+		self.proccess=f.runInParallel([[self.keyHandler,()]])
+
+	def keyHandler(self):
+		self.stop=False
+		while not self.stop:
+			t.sleep(0.01)
+			char=getLastChar()
+			if not char==None:
+				try:
+					f.runInParallel([self.actions[char]])
+				except KeyError:
+					pass
+	def halt(self,wait=True):
+		self.stop=True
+		if wait:
+			self.proccess[0].join()
+
+def asciiBlock(topLeft=False,topRight=False,bottomLeft=False,bottomRight=False,
+			   shade=None):
+	if topLeft or topRight or bottomLeft or bottomRight:
+		blocks={ #topLeft,topRight,bottomLeft,bottomRight
+			"False,False,True,False":"▖",
+			"False,False,False,True":"▗",
+			"True,False,False,False":"▘",
+			"False,True,False,False":"▝",
+			"True,False,True,True":"▙",
+			"True,False,False,True":"▚",
+			"True,True,True,False":"▛",
+			"True,True,False,True":"▜",
+			"False,True,True,False":"▞",
+			"False,True,True,True":"▟",
+			"True,True,False,False":"▀",
+			"False,False,True,True":"▄",
+			"True,False,True,False":"▌",
+			"False,True,False,True":"▐",
+			"True,True,True,True":"█",
+			"False,False,False,False":" "
+		}
+		return blocks[",".join([str(topLeft),str(topRight),str(bottomLeft),str(bottomRight)])]
+	elif not shade==None:
+		shades=[" ","░","▒","▓","█"]
+		return shades[shade]
+
+class FramerateLimiter:
+	def __init__(self,fps):
+		self.minimumFrameDelta=(1/fps)*1000000000
+		self.frameTimes=0
+		self.frames=0
+	def startFrame(self):
+		self.frameStart=t.perf_counter_ns()
+	def endFrame(self):
+		self.frameTime=t.perf_counter_ns()-self.frameStart
+		self.frameTimes+=self.frameTime
+		self.frames+=1
+	def delayTillNextFrame(self):
+		if self.minimumFrameDelta-self.frameTime>0:
+			t.sleep((self.minimumFrameDelta-self.frameTime)/1000000000)
+
+class FramerateTracker:
+	def __init__(self):
+		self.frameTimes=0
+		self.frames=0
+		self.frameTime=0
+	def startFrame(self):
+		self.frameStart=t.perf_counter_ns()
+	def endFrame(self):
+		self.frameTime=t.perf_counter_ns()-self.frameStart
+		self.frameTimes+=self.frameTime
+		self.frames+=1
+	def calculateAverageFrameTime(self):
+		try:
+			return ((self.frameTimes)/1000000000)/self.frames
+		except ZeroDivisionError:
+			return 0
+	def calculateAverageFPS(self):
+		try:
+			return 1/self.calculateAverageFrameTime()
+		except ZeroDivisionError:
+			return 0
+	def resetFrameMeasurements(self):
+		self.frameTimes=0
+		self.frames=0
+	def calculateCurrentFPS(self):
+		try:
+			return 1/(self.frameTime/1000000000)
+		except ZeroDivisionError:
+			return 0
