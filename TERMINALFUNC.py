@@ -325,7 +325,7 @@ class KeyLogger:
 			t.sleep(0.01)
 			char=getLastChar()
 			if not char==None:
-				self.keys+=[{t.time():key}]
+				self.keys+=[{t.time():char}]
 
 	def halt(self,wait=True):
 		self.stop=True
@@ -333,7 +333,7 @@ class KeyLogger:
 			self.proccess[0].join()
 
 class KeyHandler:
-	def __init__(self,actions): #actions are {"a":function}
+	def __init__(self,actions): #actions are {key:[function,args],...}
 		self.actions=actions
 		self.actionProcecces=[]
 
@@ -349,7 +349,11 @@ class KeyHandler:
 				try:
 					f.runInParallel([self.actions[char]])
 				except KeyError:
-					pass
+					try:
+						f.runInParallel([[self.actions["default"],(char)]])
+					except KeyError:
+						pass
+
 	def halt(self,wait=True):
 		self.stop=True
 		if wait:
@@ -383,7 +387,13 @@ def asciiBlock(topLeft=False,topRight=False,bottomLeft=False,bottomRight=False,
 
 class FramerateLimiter:
 	def __init__(self,fps):
-		self.minimumFrameDelta=(1/fps)*1000000000
+		if fps==None:
+			try:
+				self.minimumFrameDelta=(1/fps)*1000000000
+			except ZeroDivisionError:
+				self.minimumFrameDelta=float("inf")
+		else:
+			self.minimumFrameDelta=0
 		self.frameTimes=0
 		self.frames=0
 	def startFrame(self):
@@ -403,23 +413,28 @@ class FramerateTracker:
 		self.frameTime=0
 	def startFrame(self):
 		self.frameStart=t.perf_counter_ns()
+		
 	def endFrame(self):
 		self.frameTime=t.perf_counter_ns()-self.frameStart
 		self.frameTimes+=self.frameTime
 		self.frames+=1
+
 	def calculateAverageFrameTime(self):
 		try:
 			return ((self.frameTimes)/1000000000)/self.frames
 		except ZeroDivisionError:
 			return 0
+
 	def calculateAverageFPS(self):
 		try:
 			return 1/self.calculateAverageFrameTime()
 		except ZeroDivisionError:
 			return 0
+
 	def resetFrameMeasurements(self):
 		self.frameTimes=0
 		self.frames=0
+
 	def calculateCurrentFPS(self):
 		try:
 			return 1/(self.frameTime/1000000000)
