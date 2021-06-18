@@ -101,17 +101,17 @@
   - ***bool*** `self.stop`: cause the keyHandler to end if it is set to `True`
   - ***dict*** `self.actions`: the key-to-function mappings, from the time of initiation. You can change this directly.
 - ***obj*** `FramerateLimiter(fps)`: limits framerate accurately
-  ***arg*** `fps` is the fps to limit at
-  ***func*** `startFrame()`: start a frame
-  ***func*** `endFrame()`: end a frame, making a frame
-  ***func*** `delayTillNextFrame()`: delays till the end of the previous frame
-- ***obj*** `FramerateTracker()`: tracks framerate accurately
-  ***func*** `startFrame()`: start a frame
-  ***func*** `endFrame()`: end a frame, making a frame
-  ***func*** `calculateAverageFrameTime()`: get the average time taken to make a frame
-  ***func*** `calculateAverageFPS()`: calculate the average FPS
-  ***func*** `resetFrameMeasurements()`: reset the frame time measurements
-  ***func*** `calculateCurrentFPS()`: calculate the fps based on the previous frame
+  ***arg*** `fps` is the fps to limit at  
+  ***func*** `startFrame()`: start a frame  
+  ***func*** `endFrame()`: end a frame, making a frame  
+  ***func*** `delayTillNextFrame()`: delays till the end of the previous frame  
+- ***obj*** `FramerateTracker()`: tracks framerate accurately  
+  ***func*** `startFrame()`: start a frame  
+  ***func*** `endFrame()`: end a frame, making a frame  
+  ***func*** `calculateAverageFrameTime()`: get the average time taken to make a frame  
+  ***func*** `calculateAverageFPS()`: calculate the average FPS  
+  ***func*** `resetFrameMeasurements()`: reset the frame time measurements  
+  ***func*** `calculateCurrentFPS()`: calculate the fps based on the previous frame  
 
 ## Installation:
 ### Macos/Linux:
