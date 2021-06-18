@@ -387,7 +387,7 @@ def asciiBlock(topLeft=False,topRight=False,bottomLeft=False,bottomRight=False,
 
 class FramerateLimiter:
 	def __init__(self,fps):
-		if fps==None:
+		if not fps==None:
 			try:
 				self.minimumFrameDelta=(1/fps)*1000000000
 			except ZeroDivisionError:
