@@ -30,6 +30,7 @@
     - ***kwarg*** If `screen` is changed to `True`, it will clear the screen
     - ***kwarg*** If `scrollback` is changed to `True`, it will clear the scrollback
     - ***kwarg*** If `line` is changed to `True`, it will clear the line that the cursor is currently on
+- ***func*** `clearer(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,toStart=False)`: its the same as `clear()` but it returns a string that will have the same effect when printed
 - ***obj*** `CursorSaver()`: a object with cursor-saving and loading utils
   it uses `getPosition()`, causing it to clear stdin
   - ***func*** `self.save(id)`: save cursor with `id` as the id. `id` must be hashable
@@ -74,6 +75,7 @@
     - ***kwarg*** If `color8` is not `False`, and is one of these: `blue` `black` `red` `green` `yellow` `magenta` `cyan` `white`
       , it will make the foreground of all text printed after changing style `color8` colored
     - ***kwarg*** If `color256` is not `False` and is a `int` from `0` to `256`, it will make the foreground of all text printed after changing style `color256` colored
+- ***func*** `style(background=False,foreground=False,color8=False,color256=False,reset=False,bold=False,dim=False,italic=False,underline=False,blink=False,invert=False,invisible=False,strikethrough=False)`: its the same as `changeStyle()` but it returns a string that will have the same effect when printed
 - ***func*** `moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False)`: move the cursor
   - ***kwarg*** If `to` is not `False`, it will move the cursor to column `to["column"]` and row `to["row"]`
   - ***kwarg*** If `column` is not `False`, it will move the cursor to column `column`
@@ -81,6 +83,7 @@
   - ***kwarg*** If `down` is not `False`, it will move the cursor down `down` spaces
   - ***kwarg*** If `left` is not `False`, it will move the cursor left `left` spaces
   - ***kwarg*** If `right` is not `False`, it will move the cursor right `right` spaces
+- ***func*** `cursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False)`: its the same as `moveCursor()` but it returns a string that will have the same effect when printed
 - ***obj*** `KeyLogger()`: logs keys  
   it adds logged keys to `self.keys` list in the format of {`time.time()`output:key}  
   it is accurate to about 1/100th of a second
@@ -101,17 +104,22 @@
   - ***bool*** `self.stop`: cause the keyHandler to end if it is set to `True`
   - ***dict*** `self.actions`: the key-to-function mappings, from the time of initiation. You can change this directly.
 - ***obj*** `FramerateLimiter(fps)`: limits framerate accurately
-  ***arg*** `fps` is the fps to limit at  
-  ***func*** `startFrame()`: start a frame  
-  ***func*** `endFrame()`: end a frame, making a frame  
-  ***func*** `delayTillNextFrame()`: delays till the end of the previous frame  
+  - ***arg*** `fps` is the fps to limit at  
+  - ***func*** `startFrame()`: start a frame  
+  - ***func*** `endFrame()`: end a frame, making a frame  
+  - ***func*** `delayTillNextFrame()`: delays till the end of the previous frame  
+  - ***int*** `frameTime`: time taken for the previous frame, in ns
 - ***obj*** `FramerateTracker()`: tracks framerate accurately  
-  ***func*** `startFrame()`: start a frame  
-  ***func*** `endFrame()`: end a frame, making a frame  
-  ***func*** `calculateAverageFrameTime()`: get the average time taken to make a frame  
-  ***func*** `calculateAverageFPS()`: calculate the average FPS  
-  ***func*** `resetFrameMeasurements()`: reset the frame time measurements  
-  ***func*** `calculateCurrentFPS()`: calculate the fps based on the previous frame  
+  - ***func*** `startFrame()`: start a frame  
+  - ***func*** `endFrame()`: end a frame, making a frame  
+  - ***func*** `calculateAverageFPS()`: calculate the average FPS  
+  - ***func*** `calculateCurrentFPS()`: calculate the fps based on the previous frame  
+  - ***func*** `calculateAverageFrameTime()`: get the average time taken to make a frame, in seconds
+  - ***func*** `calculateCurrentFrameTime()`: calculate the time that the previous frame took, in seconds
+  - ***func*** `resetFrameMeasurements()`: reset the frame time measurements  
+  - ***int*** `frames`: the number of frames that have been captured
+  - ***int*** `frameTime`: the amount of time taken for the last frame in ns
+  - ***list\<int\>*** `frameTimes`: the amount of time taken by all the frames, in ns
 
 ## Installation:
 ### Macos/Linux:
