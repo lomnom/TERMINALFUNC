@@ -413,16 +413,12 @@ class FramerateLimiter:
 				self.minimumFrameDelta=float("inf")
 		else:
 			self.minimumFrameDelta=0
-		self.frameTimes=0
-		self.frames=0
 
 	def startFrame(self):
 		self.frameStart=t.perf_counter_ns()
 
 	def endFrame(self):
 		self.frameTime=t.perf_counter_ns()-self.frameStart
-		self.frameTimes+=self.frameTime
-		self.frames+=1
 
 	def delayTillNextFrame(self):
 		if self.minimumFrameDelta-self.frameTime>0:
@@ -447,6 +443,9 @@ class FramerateTracker:
 			return ((self.frameTimes)/1000000000)/self.frames
 		except ZeroDivisionError:
 			return 0
+
+	def calculateCurrentFrameTime(self):
+		return (self.frameTime)/1000000000
 
 	def calculateAverageFPS(self):
 		try:
