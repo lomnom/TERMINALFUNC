@@ -123,28 +123,41 @@ def echoKeys(enable=False,disable=False): #change whether to let keypresses be d
 	else:
 		return isEchoKeys
 
-def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,toStart=False): 
+def clearer(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,toStart=False):
+	escapes=""
+
 	#clear the terminal in different ways
 	if fromCursor:
 		if line:
 			if toEnd:
-				print(
-					e.Escapes.Erase.FromCursor.toEndOfLine
-				)
+					escapes+=e.Escapes.Erase.FromCursor.toEndOfLine
+
 			if toStart:
-				print(
-					e.Escapes.Erase.FromCursor.toStartOfLine
-				)
+					escapes+=e.Escapes.Erase.FromCursor.toStartOfLine
+
 		if screen:
 			if toEnd:
-				print(
-					e.Escapes.Erase.FromCursor.toEndOfScreen
-				)
+					escapes+=e.Escapes.Erase.FromCursor.toEndOfScreen
+
 			if toStart:
-				print(
-					e.Escapes.Erase.FromCursor.toStartOfScreen
-				)
-		return
+					escapes+=e.Escapes.Erase.FromCursor.toStartOfScreen
+
+		return escapes
+
+	if screen:
+			escapes+=e.Escapes.Cursor.home+e.Escapes.Erase.FromCursor.toEndOfScreen
+
+	if scrollback:
+			escapes+=e.Escapes.Erase.scrollback
+
+	if line:
+			escapes+=e.Escapes.Erase.entireLine
+
+	return escapes
+
+def clear(screen=False,scrollback=False,line=False,fromCursor=False,toEnd=False,toStart=False): 
+	#clear the terminal in different ways
+	print(clearer(screen=screen,scrollback=scrollback,line=line,fromCursor=fromCursor,toEnd=toEnd,toStart=toStart))
 
 	if screen:
 		print(
@@ -284,27 +297,33 @@ def changeStyle(background=None,foreground=None,color8=None,color256=None,
 		underline=underline,blink=blink,invert=invert,invisible=invisible,
 		strikethrough=strikethrough))
 
-def moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False): #move cursor
+def cursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False):
+	escapes=""
 	if not to==False:
-		print(e.Escapes.Cursor.moveEscape(to["row"],to["column"]))
+		escapes+=e.Escapes.Cursor.moveEscape(to["row"],to["column"])
 
 	if not up==False:
-		print(e.Escapes.Cursor.upEscape(up))
+		escapes+=e.Escapes.Cursor.upEscape(up)
 
 	if not down==False:
-		print(e.Escapes.Cursor.downEscape(down))
+		escapes+=e.Escapes.Cursor.downEscape(down)
 
 	if not left==False:
-		print(e.Escapes.Cursor.leftEscape(left))
+		escapes+=e.Escapes.Cursor.leftEscape(left)
 
 	if not right==False:
-		print(e.Escapes.Cursor.rightEscape(right))
+		escapes+=e.Escapes.Cursor.rightEscape(right)
 
 	if not home==False:
-		print(e.Escapes.Cursor.home)
+		escapes+=e.Escapes.Cursor.home
 
 	if not column==False:
-		print(moveToColumn(column)) 
+		escapes+=e.Escapes.Cursor.moveToColumn(column)
+
+	return escapes
+
+def moveCursor(to=False,column=False,up=False,down=False,left=False,right=False,home=False): #move cursor
+	print(cursor(to=to,column=column,up=up,down=down,left=left,right=right,home=home))
 
 def saveScreen():
 	print(e.Escapes.saveScreen)
@@ -396,12 +415,15 @@ class FramerateLimiter:
 			self.minimumFrameDelta=0
 		self.frameTimes=0
 		self.frames=0
+
 	def startFrame(self):
 		self.frameStart=t.perf_counter_ns()
+
 	def endFrame(self):
 		self.frameTime=t.perf_counter_ns()-self.frameStart
 		self.frameTimes+=self.frameTime
 		self.frames+=1
+
 	def delayTillNextFrame(self):
 		if self.minimumFrameDelta-self.frameTime>0:
 			t.sleep((self.minimumFrameDelta-self.frameTime)/1000000000)
@@ -411,6 +433,7 @@ class FramerateTracker:
 		self.frameTimes=0
 		self.frames=0
 		self.frameTime=0
+
 	def startFrame(self):
 		self.frameStart=t.perf_counter_ns()
 		
