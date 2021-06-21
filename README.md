@@ -129,8 +129,7 @@
 3. Run this:
 ```
 PYPATH=$(python3 -c "import os;print(os.__file__.replace('os.py',''))")
-curl https://raw.githubusercontent.com/lomnom/TERMINALFUNC/main/TERMINALFUNC.py - kashdfj.py
-mv kashdfj.py "$PYPATH"TERMINALFUNC.py
+curl https://raw.githubusercontent.com/lomnom/TERMINALFUNC/main/TERMINALFUNC.py > "$PYPATH"TERMINALFUNC.py
 ```
 
 ## Uninstallation:
