@@ -128,9 +128,7 @@
 1. [install FUNC](https://github.com/lomnom/FUNC/blob/main/README.md)
 3. Run this:
 ```
-echo "import os;print(os.__file__.replace('os.py',''))" - aahifbsab.py
-PYPATH=$(python3 aahifbsab.py)
-rm aahifbsab.py
+PYPATH=$(python3 -c "import os;print(os.__file__.replace('os.py',''))")
 curl https://raw.githubusercontent.com/lomnom/TERMINALFUNC/main/TERMINALFUNC.py - kashdfj.py
 mv kashdfj.py "$PYPATH"TERMINALFUNC.py
 ```
@@ -141,9 +139,7 @@ mv kashdfj.py "$PYPATH"TERMINALFUNC.py
 2. [uninstall FUNC](https://github.com/lomnom/FUNC/blob/main/README.md)
 3. Run this:
 ```
-echo "import os;print(os.__file__.replace('os.py',''))" - aahifbsab.py
-PYPATH=$(python3 aahifbsab.py)
-rm aahifbsab.py
+PYPATH=$(python3 -c "import os;print(os.__file__.replace('os.py',''))")
 rm "$PYPATH"TERMINALFUNC.py
 ```
 
