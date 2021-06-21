@@ -125,6 +125,7 @@
 ### Macos/Linux:
 
 1. [install ESCAPES](https://github.com/lomnom/ESCAPES/blob/main/README.md)
+1. [install FUNC](https://github.com/lomnom/FUNC/blob/main/README.md)
 3. Run this:
 ```
 echo "import os;print(os.__file__.replace('os.py',''))" - aahifbsab.py
@@ -137,7 +138,8 @@ mv kashdfj.py "$PYPATH"TERMINALFUNC.py
 ## Uninstallation:
 ### macos/linux:
 1. [uninstall ESCAPES](https://github.com/lomnom/ESCAPES/blob/main/README.md)
-2. Run this:
+2. [uninstall FUNC](https://github.com/lomnom/FUNC/blob/main/README.md)
+3. Run this:
 ```
 echo "import os;print(os.__file__.replace('os.py',''))" - aahifbsab.py
 PYPATH=$(python3 aahifbsab.py)
