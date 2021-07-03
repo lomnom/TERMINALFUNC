@@ -1,4 +1,4 @@
-# TERMINALFUNC, a python library with every terminal manuplation function you will ever need!
+# TERMINALFUNC, a python library with every terminal manuplation function you will ever need (probably)!
 ## Attributes:
 - ***func*** `stopSleep()`: stop idle sleep while current process exists. Only works on OSX
 - ***func*** `getPosition()`: get current cursor position. Position is returned in `{"row":row, "column":column}`  
